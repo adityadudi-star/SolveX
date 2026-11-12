@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 25% 97%;
+    --foreground: 222 60% 14%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 60% 14%;
+    --primary: 222 70% 18%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 25% 94%;
+    --secondary-foreground: 222 60% 14%;
+    --muted: 220 22% 94%;
+    --muted-foreground: 220 12% 40%;
+    --border: 220 20% 90%;
+    --input: 220 20% 86%;
+    --ring: 43 78% 45%;
+  }
+  * { @apply border-border; }
+  html { -webkit-font-smoothing: antialiased; }
+  body { @apply bg-background text-foreground font-sans; font-feature-settings: "cv11", "ss01"; }
+  h1, h2, h3 { @apply tracking-tight; }
+}
+
+@layer components {
+  .num { font-variant-numeric: tabular-nums; }
+  .eyebrow { @apply text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground; }
+}
+
+@keyframes solvex-pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .55; transform: scale(.96); } }
+.solvex-pulse { animation: solvex-pulse 1.6s ease-in-out infinite; }
