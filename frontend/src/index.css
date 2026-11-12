@@ -37,10 +37,10 @@ body::before { content:""; position:fixed; inset:0; z-index:-1; pointer-events:n
   animation: solvex-drift 14s ease-in-out infinite alternate; }
 body::after { content:""; position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.5;
   background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,0.35) 50%, transparent 65%); background-size: 250% 100%; animation: solvex-sheen 9s linear infinite; }
-img[src$="solvex-logo.png"], img[src$="solvex-mark.png"] { animation: solvex-glow 3.2s ease-in-out infinite; }
+img[src$="solvex-logo.png"], img[src$="solvex-mark.png"] { animation: none; filter: none; }
 .rounded-lg.border.bg-card { background: rgba(255,255,255,0.72); backdrop-filter: blur(14px) saturate(1.3); -webkit-backdrop-filter: blur(14px) saturate(1.3);
   border-color: rgba(255,255,255,0.9); box-shadow: 0 0 0 1px rgba(255,255,255,0.6) inset, 0 8px 26px rgba(var(--glow),0.14), 0 0 18px rgba(var(--glow),0.10);
-  transition: box-shadow .2s ease, transform .2s cubic-bezier(.2,.8,.3,1.2), background .2s ease; animation: solvex-rise .5s ease both; }
+  transition: box-shadow .2s ease, transform .2s cubic-bezier(.2,.8,.3,1.2), background .2s ease; animation: solvex-rise .5s ease backwards; }
 .rounded-lg.border.bg-card:hover { background: rgba(255,255,255,0.92); transform: translateY(-6px) scale(1.015);
   box-shadow: 0 0 0 1.5px rgba(27,58,122,0.65), 0 0 10px rgba(var(--glow),0.45), 0 10px 18px rgba(var(--glow),0.28); }
 aside, header.sticky { background: rgba(255,255,255,0.6) !important; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 4px 0 30px rgba(var(--glow),0.12); }
