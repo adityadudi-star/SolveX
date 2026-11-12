@@ -25,6 +25,9 @@ def init_engine(url: str | None = None) -> Engine:
     kwargs: dict = {}
     if url.startswith("sqlite"):
         kwargs["connect_args"] = {"check_same_thread": False, "timeout": 30}
+        if ":memory:" not in url:   # fresh clones have no data/ directory (it is git-ignored)
+            from pathlib import Path
+            Path(url.split("///", 1)[-1]).parent.mkdir(parents=True, exist_ok=True)
         if ":memory:" in url:
             from sqlalchemy.pool import StaticPool
             kwargs["poolclass"] = StaticPool
