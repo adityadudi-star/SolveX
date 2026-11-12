@@ -1,0 +1,31 @@
+# secrets
+.env
+.env.*
+!.env.example
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+*.egg-info/
+
+# local data: databases, SEC filing downloads/caches, checkpoints
+backend/data/
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+
+# node
+node_modules/
+frontend/dist/
+*.tsbuildinfo
+
+# editor / os
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+.claude/
