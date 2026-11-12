@@ -1,4 +1,4 @@
-@tailwind base;
+﻿@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -29,17 +29,24 @@
   .eyebrow { @apply text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground; }
 }
 
-/* ---- glow effects ---- */
-body { background-image: radial-gradient(900px 420px at 85% -80px, rgba(201,151,28,0.10), transparent 60%), radial-gradient(800px 400px at -10% 0%, rgba(27,58,122,0.08), transparent 60%); background-attachment: fixed; }
-img[src$="solvex-logo.png"], img[src$="solvex-mark.png"] { filter: drop-shadow(0 0 10px rgba(201,151,28,0.35)); animation: solvex-glow 3.2s ease-in-out infinite; }
-.rounded-lg.border.bg-card { transition: box-shadow .25s ease, transform .25s ease, border-color .25s ease; }
-.rounded-lg.border.bg-card:hover { box-shadow: 0 0 0 1px rgba(201,151,28,0.35), 0 8px 30px rgba(201,151,28,0.18); border-color: rgba(201,151,28,0.45); transform: translateY(-1px); }
-button.bg-gold-500 { box-shadow: 0 0 16px rgba(201,151,28,0.45); animation: solvex-btn-glow 2.6s ease-in-out infinite; }
-button.bg-navy-800:hover, a.bg-navy-800:hover { box-shadow: 0 0 18px rgba(27,58,122,0.45); }
-input:focus-visible, textarea:focus-visible, select:focus-visible { box-shadow: 0 0 0 4px rgba(201,151,28,0.18); }
-@keyframes solvex-glow { 0%,100% { filter: drop-shadow(0 0 6px rgba(201,151,28,0.25)); } 50% { filter: drop-shadow(0 0 16px rgba(201,151,28,0.65)); } }
-@keyframes solvex-btn-glow { 0%,100% { box-shadow: 0 0 10px rgba(201,151,28,0.35); } 50% { box-shadow: 0 0 24px rgba(201,151,28,0.75); } }
+/* ---- white glass / glow effects ---- */
+body { background: linear-gradient(135deg, #dfe7f5 0%, #eef2fa 45%, #dde5f3 100%) fixed; }
+body::before { content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
+  background: radial-gradient(700px 380px at 82% -60px, rgba(255,255,255,0.95), transparent 65%), radial-gradient(620px 340px at 5% 90%, rgba(255,255,255,0.75), transparent 65%); }
+img[src$="solvex-logo.png"], img[src$="solvex-mark.png"] { animation: solvex-glow 3.2s ease-in-out infinite; }
+.rounded-lg.border.bg-card { background: rgba(255,255,255,0.62); backdrop-filter: blur(14px) saturate(1.2); -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  border-color: rgba(255,255,255,0.85); box-shadow: 0 0 0 1px rgba(255,255,255,0.6) inset, 0 8px 30px rgba(20,40,90,0.08);
+  transition: box-shadow .25s ease, transform .25s ease, background .25s ease; }
+.rounded-lg.border.bg-card:hover { background: rgba(255,255,255,0.78); box-shadow: 0 0 0 1px rgba(255,255,255,0.9) inset, 0 0 28px rgba(255,255,255,0.95), 0 10px 34px rgba(20,40,90,0.12); transform: translateY(-1px); }
+aside, header.sticky { background: rgba(255,255,255,0.55) !important; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+button.bg-gold-500 { background: rgba(255,255,255,0.55); color: #0A1838; border: 1px solid rgba(255,255,255,0.95); backdrop-filter: blur(10px);
+  box-shadow: 0 0 18px rgba(255,255,255,0.95), 0 4px 16px rgba(20,40,90,0.12); animation: solvex-btn-glow 2.6s ease-in-out infinite; }
+button.bg-gold-500:hover { background: rgba(255,255,255,0.8); }
+button.bg-navy-800:hover, a.bg-navy-800:hover { box-shadow: 0 0 18px rgba(255,255,255,0.8), 0 0 14px rgba(27,58,122,0.35); }
+input:focus-visible, textarea:focus-visible, select:focus-visible { box-shadow: 0 0 0 4px rgba(255,255,255,0.9), 0 0 14px rgba(255,255,255,0.9); }
+@keyframes solvex-glow { 0%,100% { filter: drop-shadow(0 0 5px rgba(255,255,255,0.9)); } 50% { filter: drop-shadow(0 0 16px rgba(255,255,255,1)) drop-shadow(0 0 4px rgba(120,150,220,0.45)); } }
+@keyframes solvex-btn-glow { 0%,100% { box-shadow: 0 0 10px rgba(255,255,255,0.7), 0 4px 16px rgba(20,40,90,0.12); } 50% { box-shadow: 0 0 26px rgba(255,255,255,1), 0 4px 16px rgba(20,40,90,0.12); } }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
-
 @keyframes solvex-pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .55; transform: scale(.96); } }
 .solvex-pulse { animation: solvex-pulse 1.6s ease-in-out infinite; }
+
