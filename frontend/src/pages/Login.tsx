@@ -9,7 +9,7 @@ import { useReviewer } from "@/hooks/useReviewer";
 
 export default function Login() {
   const { login } = useReviewer();
-  const [name, setName] = useState("");
+  const [name, setName] = useState("Priyanshu");
   const [token, setToken] = useState("");
   const m = useMutation({
     mutationFn: () => api.login(name.trim(), token),

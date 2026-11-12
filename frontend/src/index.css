@@ -29,5 +29,17 @@
   .eyebrow { @apply text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground; }
 }
 
+/* ---- glow effects ---- */
+body { background-image: radial-gradient(900px 420px at 85% -80px, rgba(201,151,28,0.10), transparent 60%), radial-gradient(800px 400px at -10% 0%, rgba(27,58,122,0.08), transparent 60%); background-attachment: fixed; }
+img[src$="solvex-logo.png"], img[src$="solvex-mark.png"] { filter: drop-shadow(0 0 10px rgba(201,151,28,0.35)); animation: solvex-glow 3.2s ease-in-out infinite; }
+.rounded-lg.border.bg-card { transition: box-shadow .25s ease, transform .25s ease, border-color .25s ease; }
+.rounded-lg.border.bg-card:hover { box-shadow: 0 0 0 1px rgba(201,151,28,0.35), 0 8px 30px rgba(201,151,28,0.18); border-color: rgba(201,151,28,0.45); transform: translateY(-1px); }
+button.bg-gold-500 { box-shadow: 0 0 16px rgba(201,151,28,0.45); animation: solvex-btn-glow 2.6s ease-in-out infinite; }
+button.bg-navy-800:hover, a.bg-navy-800:hover { box-shadow: 0 0 18px rgba(27,58,122,0.45); }
+input:focus-visible, textarea:focus-visible, select:focus-visible { box-shadow: 0 0 0 4px rgba(201,151,28,0.18); }
+@keyframes solvex-glow { 0%,100% { filter: drop-shadow(0 0 6px rgba(201,151,28,0.25)); } 50% { filter: drop-shadow(0 0 16px rgba(201,151,28,0.65)); } }
+@keyframes solvex-btn-glow { 0%,100% { box-shadow: 0 0 10px rgba(201,151,28,0.35); } 50% { box-shadow: 0 0 24px rgba(201,151,28,0.75); } }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
 @keyframes solvex-pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .55; transform: scale(.96); } }
 .solvex-pulse { animation: solvex-pulse 1.6s ease-in-out infinite; }

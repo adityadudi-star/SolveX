@@ -21,7 +21,7 @@ export default {
       },
       borderRadius: { lg: "0.75rem", md: "0.5rem", sm: "0.375rem" },
       fontFamily: { sans: ["Inter", "ui-sans-serif", "system-ui", "Segoe UI", "sans-serif"] },
-      boxShadow: { card: "0 1px 2px rgba(10,24,56,0.04), 0 4px 16px rgba(10,24,56,0.05)" },
+      boxShadow: { glow: "0 0 0 1px rgba(201,151,28,0.35), 0 6px 28px rgba(201,151,28,0.22)", "glow-navy": "0 0 22px rgba(27,58,122,0.35)", card: "0 1px 2px rgba(10,24,56,0.04), 0 4px 16px rgba(10,24,56,0.05)" },
     },
   },
   plugins: [],

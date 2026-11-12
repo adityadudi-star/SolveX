@@ -40,7 +40,8 @@ export default function AppLayout() {
       </nav>
       <div className="m-3 rounded-lg border bg-secondary/60 p-3">
         <div className="flex items-center gap-2 text-xs font-semibold text-navy-800"><ShieldCheck className="h-4 w-4 text-gold-600" />Reviewer</div>
-        <div className="mt-1 truncate text-sm">{session?.name}</div>
+        <div className="mt-1 truncate text-sm font-semibold">{session?.name}</div>
+        <div className="truncate text-[11px] text-gold-600">@{(session?.name ?? "").toLowerCase().replace(/\s+/g, "")}</div>
         <div className="mt-0.5 text-[10px] text-muted-foreground">Demo authentication — not production-grade.</div>
         <Button variant="outline" size="sm" className="mt-2 w-full" onClick={logout}><LogOut className="h-3.5 w-3.5" />Sign out</Button>
       </div>
