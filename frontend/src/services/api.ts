@@ -3,7 +3,8 @@ import type {
   Audit, Explanation, FilingRefDto, Health, Metric, ProgressSnapshot, ReviewEventDto, SettingsDto, Simulation, Summary, Trends, Usage, Company,
 } from "@/types";
 
-export const API_BASE: string = (import.meta.env.VITE_API_URL as string | undefined) ?? "http://localhost:8000/api";
+// Default: same host the page was loaded from, so it works from another device on the LAN / hotspot.
+export const API_BASE: string = (import.meta.env.VITE_API_URL as string | undefined) ?? `http://${window.location.hostname}:8000/api`;
 
 export const http = axios.create({ baseURL: API_BASE, timeout: 60_000 });
 

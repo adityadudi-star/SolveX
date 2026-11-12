@@ -29,7 +29,11 @@ app = FastAPI(
                 "Reviewer endpoints use demo shared-token protection (not production-grade).",
     contact={"name": "SolveX"},
 )
-app.add_middleware(CORSMiddleware, allow_origins=get_settings().cors_list, allow_methods=["*"], allow_headers=["*"])
+app.add_middleware(
+    CORSMiddleware, allow_origins=get_settings().cors_list, allow_methods=["*"], allow_headers=["*"],
+    # also allow the UI opened from another device on the same private network (hotspot / LAN) — private ranges only
+    allow_origin_regex=r"^http://(localhost|127\.0\.0\.1|10\.\d+\.\d+\.\d+|192\.168\.\d+\.\d+|172\.(1[6-9]|2\d|3[01])\.\d+\.\d+):5173$",
+)
 for r in (system.router, audits.router, metrics.router):
     app.include_router(r, prefix="/api")
 
