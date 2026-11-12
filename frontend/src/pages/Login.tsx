@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { Lock } from "lucide-react";
 import { Logo } from "@/components/Brand";
@@ -17,7 +17,7 @@ export default function Login() {
   });
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-white to-navy-50 px-4">
+    <div className="flex min-h-screen items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="mb-8 flex flex-col items-center text-center">
           <Logo className="w-64" />
@@ -33,15 +33,16 @@ export default function Login() {
               <div className="space-y-1.5"><Label htmlFor="t">Demo reviewer token</Label>
                 <Input id="t" type="password" value={token} onChange={(e) => setToken(e.target.value)} placeholder="REVIEWER_TOKEN from backend/.env" required /></div>
               {m.isError && <Callout tone="danger">{errMsg(m.error)}</Callout>}
-              <Button className="w-full" size="lg" disabled={m.isPending}>{m.isPending ? "Checking…" : "Sign in"}</Button>
+              <Button className="w-full" size="lg" disabled={m.isPending}>{m.isPending ? "Checkingâ€¦" : "Sign in"}</Button>
             </form>
             <Callout tone="warn" className="mt-5" title="Demo authentication">
               A shared token protects reviewer actions in this prototype. It is not production-grade authentication (no per-user credentials, MFA, or session management).
             </Callout>
           </CardContent>
         </Card>
-        <p className="mt-6 text-center text-xs text-muted-foreground">© SolveX · SolveX Financial Auditor</p>
+        <p className="mt-6 text-center text-xs text-muted-foreground">Â© SolveX Â· SolveX Financial Auditor</p>
       </div>
     </div>
   );
 }
+
