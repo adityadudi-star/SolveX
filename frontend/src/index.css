@@ -29,24 +29,37 @@
   .eyebrow { @apply text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground; }
 }
 
-/* ---- white glass / glow effects ---- */
-body { background: linear-gradient(135deg, #dfe7f5 0%, #eef2fa 45%, #dde5f3 100%) fixed; }
+/* ---- silk-blue background, dark-blue glow, glass + motion effects ---- */
+:root { --glow: 18, 41, 92; }
+body { background: #cfe0f3 url("/bg-silk.jpg") center top / cover fixed no-repeat; }
 body::before { content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
-  background: radial-gradient(700px 380px at 82% -60px, rgba(255,255,255,0.95), transparent 65%), radial-gradient(620px 340px at 5% 90%, rgba(255,255,255,0.75), transparent 65%); }
+  background: radial-gradient(640px 360px at 15% 12%, rgba(var(--glow),0.16), transparent 65%), radial-gradient(700px 420px at 88% 80%, rgba(27,58,122,0.18), transparent 65%);
+  animation: solvex-drift 14s ease-in-out infinite alternate; }
+body::after { content:""; position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.5;
+  background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,0.35) 50%, transparent 65%); background-size: 250% 100%; animation: solvex-sheen 9s linear infinite; }
 img[src$="solvex-logo.png"], img[src$="solvex-mark.png"] { animation: solvex-glow 3.2s ease-in-out infinite; }
-.rounded-lg.border.bg-card { background: rgba(255,255,255,0.62); backdrop-filter: blur(14px) saturate(1.2); -webkit-backdrop-filter: blur(14px) saturate(1.2);
-  border-color: rgba(255,255,255,0.85); box-shadow: 0 0 0 1px rgba(255,255,255,0.6) inset, 0 8px 30px rgba(20,40,90,0.08);
-  transition: box-shadow .25s ease, transform .25s ease, background .25s ease; }
-.rounded-lg.border.bg-card:hover { background: rgba(255,255,255,0.78); box-shadow: 0 0 0 1px rgba(255,255,255,0.9) inset, 0 0 28px rgba(255,255,255,0.95), 0 10px 34px rgba(20,40,90,0.12); transform: translateY(-1px); }
-aside, header.sticky { background: rgba(255,255,255,0.55) !important; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
-button.bg-gold-500 { background: rgba(255,255,255,0.55); color: #0A1838; border: 1px solid rgba(255,255,255,0.95); backdrop-filter: blur(10px);
-  box-shadow: 0 0 18px rgba(255,255,255,0.95), 0 4px 16px rgba(20,40,90,0.12); animation: solvex-btn-glow 2.6s ease-in-out infinite; }
-button.bg-gold-500:hover { background: rgba(255,255,255,0.8); }
-button.bg-navy-800:hover, a.bg-navy-800:hover { box-shadow: 0 0 18px rgba(255,255,255,0.8), 0 0 14px rgba(27,58,122,0.35); }
-input:focus-visible, textarea:focus-visible, select:focus-visible { box-shadow: 0 0 0 4px rgba(255,255,255,0.9), 0 0 14px rgba(255,255,255,0.9); }
-@keyframes solvex-glow { 0%,100% { filter: drop-shadow(0 0 5px rgba(255,255,255,0.9)); } 50% { filter: drop-shadow(0 0 16px rgba(255,255,255,1)) drop-shadow(0 0 4px rgba(120,150,220,0.45)); } }
-@keyframes solvex-btn-glow { 0%,100% { box-shadow: 0 0 10px rgba(255,255,255,0.7), 0 4px 16px rgba(20,40,90,0.12); } 50% { box-shadow: 0 0 26px rgba(255,255,255,1), 0 4px 16px rgba(20,40,90,0.12); } }
+.rounded-lg.border.bg-card { background: rgba(255,255,255,0.72); backdrop-filter: blur(14px) saturate(1.3); -webkit-backdrop-filter: blur(14px) saturate(1.3);
+  border-color: rgba(255,255,255,0.9); box-shadow: 0 0 0 1px rgba(255,255,255,0.6) inset, 0 8px 26px rgba(var(--glow),0.14), 0 0 18px rgba(var(--glow),0.10);
+  transition: box-shadow .28s ease, transform .28s ease, background .28s ease; animation: solvex-rise .5s ease both; }
+.rounded-lg.border.bg-card:hover { background: rgba(255,255,255,0.88); transform: translateY(-3px);
+  box-shadow: 0 0 0 1px rgba(27,58,122,0.35), 0 0 30px rgba(var(--glow),0.38), 0 14px 38px rgba(var(--glow),0.22); }
+aside, header.sticky { background: rgba(255,255,255,0.6) !important; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 4px 0 30px rgba(var(--glow),0.12); }
+.bg-gold-500 { background: linear-gradient(135deg, #12295C, #1B3A7A, #12295C); background-size: 200% 200%; color: #fff; border: 1px solid rgba(120,160,230,0.6);
+  box-shadow: 0 0 18px rgba(var(--glow),0.55), 0 4px 16px rgba(var(--glow),0.3); animation: solvex-btn-glow 2.6s ease-in-out infinite, solvex-grad 6s ease infinite; }
+.bg-gold-500:hover { transform: translateY(-1px) scale(1.02); }
+button.bg-navy-800:hover, a.bg-navy-800:hover { box-shadow: 0 0 20px rgba(var(--glow),0.55); }
+button, a { transition: transform .18s ease, box-shadow .25s ease, background .25s ease; }
+button:active { transform: scale(.97); }
+input:focus-visible, textarea:focus-visible, select:focus-visible { box-shadow: 0 0 0 4px rgba(var(--glow),0.18), 0 0 16px rgba(var(--glow),0.4); }
+@keyframes solvex-glow { 0%,100% { filter: drop-shadow(0 0 5px rgba(var(--glow),0.45)); } 50% { filter: drop-shadow(0 0 16px rgba(var(--glow),0.9)) drop-shadow(0 0 4px rgba(60,110,200,0.6)); } }
+@keyframes solvex-btn-glow { 0%,100% { box-shadow: 0 0 10px rgba(var(--glow),0.4), 0 4px 16px rgba(var(--glow),0.25); } 50% { box-shadow: 0 0 28px rgba(var(--glow),0.85), 0 4px 16px rgba(var(--glow),0.3); } }
+@keyframes solvex-grad { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+@keyframes solvex-sheen { from { background-position: 150% 0; } to { background-position: -100% 0; } }
+@keyframes solvex-drift { from { transform: translate3d(-1.5%, -1%, 0) scale(1); } to { transform: translate3d(1.5%, 1%, 0) scale(1.06); } }
+@keyframes solvex-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 @keyframes solvex-pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .55; transform: scale(.96); } }
 .solvex-pulse { animation: solvex-pulse 1.6s ease-in-out infinite; }
+
+
 
