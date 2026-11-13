@@ -8,19 +8,15 @@ import { Callout } from "@/components/audit/Common";
 import { dt } from "@/utils/format";
 import { cn } from "@/utils/cn";
 
-/** Original vs current threshold on a 60-100 scale. */
+/** Original vs current threshold on a 60-100 scale (shown only once a threshold has moved). */
 export function ThresholdTrack({ original, current }: { original: number; current: number }) {
   const pos = (v: number) => `${Math.max(0, Math.min(100, ((v - 60) / 40) * 100))}%`;
   const lo = Math.min(original, current), hi = Math.max(original, current);
-  const moved = original !== current;
   return (
-    <div className="mt-1" aria-label={`Original threshold ${original}%, current threshold ${current}%`}>
-      <div className="relative h-2 rounded-full bg-navy-100">
-        {moved && <div className="absolute top-0 h-2 rounded-full bg-pass/35" style={{ left: pos(lo), width: `calc(${pos(hi)} - ${pos(lo)})` }} />}
-        <span className="absolute -top-1 h-4 w-0.5 rounded bg-navy-600/60" style={{ left: pos(original) }} title={`Original ${original}%`} />
-        <span className={cn("absolute -top-1.5 h-5 w-1.5 rounded", moved ? "bg-pass" : "bg-navy-700")} style={{ left: pos(current) }} title={`Current ${current}%`} />
-      </div>
-      <div className="mt-1 flex justify-between text-[10px] text-muted-foreground"><span>60%</span><span>original {original}% {moved && <>→ now <b className="text-pass">{current}%</b></>}</span><span>100%</span></div>
+    <div className="relative mt-3 h-1.5 rounded-full bg-navy-100" aria-label={`Original threshold ${original}%, current threshold ${current}%`}>
+      <div className="absolute top-0 h-1.5 rounded-full bg-pass/40" style={{ left: pos(lo), width: `calc(${pos(hi)} - ${pos(lo)})` }} />
+      <span className="absolute -top-1 h-3.5 w-0.5 rounded bg-navy-600/50" style={{ left: pos(original) }} title={`Original ${original}%`} />
+      <span className="absolute -top-1 h-3.5 w-1.5 rounded bg-pass" style={{ left: pos(current) }} title={`Current ${current}%`} />
     </div>
   );
 }
@@ -74,42 +70,37 @@ export function AdaptiveCard({ m }: { m: AdaptiveMetric }) {
   const tuned = m.source === "auto" && m.last_auto;
   const prev = m.previous ?? m.default;
   const w = m.window;
-  const rate = tuned ? m.last_auto!.approval_rate ?? 0 : w.rate ?? 0;
+  const moved = m.current !== m.default;
   return (
     <div className="rounded-lg border bg-card p-5">
-      <div className="flex items-start justify-between gap-2">
-        <div className="min-w-0"><div className="eyebrow">Metric</div><h4 className="truncate text-[15px] font-semibold text-navy-900">{m.label}</h4></div>
+      <div className="flex items-center justify-between gap-2">
+        <h4 className="truncate text-[15px] font-semibold text-navy-900">{m.label}</h4>
         <SourceBadge m={m} />
       </div>
 
-      <div className="mt-4 grid grid-cols-2 gap-3">
-        <div className="rounded-md border bg-white/50 p-3"><div className="text-xs text-muted-foreground">Previous threshold</div><div className="num mt-1 text-2xl font-semibold text-navy-800/70">{prev}%</div></div>
-        <div className={cn("rounded-md border p-3", m.source === "auto" ? "border-pass/60 bg-pass-soft" : "bg-white/70")}>
-          <div className="text-xs text-muted-foreground">Current threshold</div><div className={cn("num mt-1 text-2xl font-semibold", m.source === "auto" ? "text-pass" : "text-navy-900")}>{m.current}%</div></div>
+      <div className="mt-4 flex items-center gap-3">
+        <div className="flex-1 rounded-md border bg-white/50 px-3 py-2"><div className="text-[11px] text-muted-foreground">Previous</div><div className="num text-xl font-semibold text-navy-800/60">{prev}%</div></div>
+        <div className={cn("flex-1 rounded-md border px-3 py-2", m.source === "auto" ? "border-pass/60 bg-pass-soft" : "bg-white/70")}>
+          <div className="text-[11px] text-muted-foreground">Current</div><div className={cn("num text-xl font-semibold", m.source === "auto" ? "text-pass" : "text-navy-900")}>{m.current}%</div></div>
       </div>
-      <ThresholdTrack original={m.default} current={m.current} />
-
-      <div className="mt-4 flex items-center justify-between text-sm"><span className="text-muted-foreground">{tuned ? "Reviewer approval rate" : "Approval rate in learning window"}</span>
-        <b className="num">{tuned || w.rate !== null ? `${rate}%` : "—"}</b></div>
-      <div className="mt-1"><Bar value={rate} tone="pass" /></div>
+      {moved && <ThresholdTrack original={m.default} current={m.current} />}
 
       {tuned ? (
-        <>
-          <p className="mt-3 flex items-center gap-1.5 text-sm font-semibold text-pass"><CheckCircle2 className="h-4 w-4" />Threshold auto-tuned based on reviewer feedback</p>
-          <p className="mt-1 text-xs text-muted-foreground">{m.last_auto!.reviews_considered} reviews analysed · {m.last_auto!.approvals} approvals</p>
-          <p className="mt-3 border-t pt-3 text-sm italic text-navy-800">“{m.last_auto!.reason}”</p>
-        </>
-      ) : m.source === "manual" && m.last_change ? (
-        <p className="mt-3 border-t pt-3 text-sm italic text-navy-800">“{m.last_change.reason}”</p>
+        <div className="mt-4 border-t pt-3">
+          <p className="flex items-center gap-1.5 text-sm font-semibold text-pass"><CheckCircle2 className="h-4 w-4" />Auto-tuned from reviewer feedback</p>
+          <p className="num mt-1 text-xs text-muted-foreground">{m.last_auto!.reviews_considered} reviews · {m.last_auto!.approval_rate}% approved</p>
+        </div>
+      ) : m.source === "manual" ? (
+        <p className="mt-4 border-t pt-3 text-xs text-muted-foreground">Set manually · auto-tuning paused</p>
       ) : (
-        <>
-          <p className="mt-3 text-xs text-muted-foreground">Learning: <b className="num">{w.reviews}</b> of {w.needed_reviews} qualifying reviews collected (confidence {w.low}–{w.high - 1}%){w.reviews > 0 && <> · {w.approvals} approved</>}. Needs ≥ {w.needed_rate}% approvals.</p>
+        <div className="mt-4 border-t pt-3">
+          <div className="flex justify-between text-xs text-muted-foreground"><span>Learning</span><span className="num">{w.reviews} / {w.needed_reviews} reviews</span></div>
           <div className="mt-1.5"><Bar value={Math.min(100, (w.reviews / w.needed_reviews) * 100)} tone="navy" /></div>
-        </>
+        </div>
       )}
 
-      <div className="mt-4 flex items-center justify-between border-t pt-3 text-xs text-muted-foreground">
-        <span>{m.reviews_total} reviews · {m.adjustments} auto adjustment{m.adjustments === 1 ? "" : "s"}{m.last_adjusted_at && <> · {dt(m.last_adjusted_at)}</>}</span>
+      <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
+        <span className="num">{m.reviews_total} review{m.reviews_total === 1 ? "" : "s"}</span>
         <Button variant="ghost" size="sm" onClick={() => setOpen(true)} aria-label={`Manage ${m.label} threshold`}><Settings2 className="h-3.5 w-3.5" />Manage</Button>
       </div>
       <ManageDialog m={m} open={open} onClose={() => setOpen(false)} />
