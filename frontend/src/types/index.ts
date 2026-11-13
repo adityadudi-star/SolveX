@@ -71,6 +71,24 @@ export interface Explanation {
   separation_note: string;
 }
 
+export interface AdaptiveAdjustmentDto {
+  id: number; metric_key: string; metric: string; kind: "auto" | "manual" | "reset"; previous: number; new: number; reason: string;
+  reviews_considered: number | null; approvals: number | null; approval_rate: number | null; window_low: number | null; window_high: number | null;
+  changed_by: string; ts: string;
+}
+export interface AdaptiveMetric {
+  metric_key: string; label: string; default: number; current: number; previous: number | null; source: "default" | "auto" | "manual";
+  auto_paused: boolean; epoch: number; adjustments: number; last_adjusted_at: string | null; last_adjustment_kind: string | null;
+  reviews_total: number; approval_pct_total: number | null;
+  window: { low: number; high: number; reviews: number; approvals: number; rate: number | null; needed_reviews: number; needed_rate: number };
+  last_auto: AdaptiveAdjustmentDto | null; last_change: AdaptiveAdjustmentDto | null;
+}
+export interface AdaptiveOverview {
+  config: Record<string, number>; bounds: Record<string, [number, number]>; defaults: Record<string, number>;
+  metrics: AdaptiveMetric[]; trend: Record<string, { n: number; rate: number; ts: string }[]>;
+  totals: { reviews: number; auto_adjustments: number; changes: number }; note: string;
+}
+
 export interface Simulation {
   simulation: boolean; decision: DecisionCode; decision_label: string; reasons: string[]; rules_triggered: { level: string; rule: string; reason: string }[];
   anomaly: { pct_change: number | null; abs_change: number | null; threshold: number; status: string; mandatory: boolean; explanation: string };

@@ -24,9 +24,10 @@ export function ReviewCard({ m, onDone }: { m: Metric; onDone: (msg: string) => 
       if (mode === "correct") return api.correct(m.id, parsed as number, notes.trim());
       return api.reject(m.id, notes.trim());
     },
-    onSuccess: (r: { workflow_resumed: boolean; pending_remaining: number }) => {
+    onSuccess: (r: { workflow_resumed: boolean; pending_remaining: number; adaptive?: { adjusted: { previous: number; new: number } | null } }) => {
       qc.invalidateQueries();
-      onDone(`${m.label} ${mode === "approve" ? "approved" : mode === "correct" ? "corrected" : "rejected"}. ${r.workflow_resumed ? "All mandatory items resolved — workflow resumed from its checkpoint." : `${r.pending_remaining} mandatory item(s) still pending in this audit.`}`);
+      const tuned = r.adaptive?.adjusted ? `Threshold auto-tuned based on reviewer feedback: ${r.adaptive.adjusted.previous}% → ${r.adaptive.adjusted.new}%. ` : "";
+      onDone(`${tuned}${m.label} ${mode === "approve" ? "approved" : mode === "correct" ? "corrected" : "rejected"}. ${r.workflow_resumed ? "All mandatory items resolved — workflow resumed from its checkpoint." : `${r.pending_remaining} mandatory item(s) still pending in this audit.`}`);
       setMode(null); setNotes(""); setVal("");
     },
   });

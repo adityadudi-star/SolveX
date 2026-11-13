@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
 import type {
-  Audit, Explanation, FilingRefDto, Health, Metric, ProgressSnapshot, ReviewEventDto, SettingsDto, Simulation, Summary, Trends, Usage, Company,
+  AdaptiveAdjustmentDto, AdaptiveOverview, Audit, Explanation, FilingRefDto, Health, Metric, ProgressSnapshot, ReviewEventDto, SettingsDto, Simulation, Summary, Trends, Usage, Company,
 } from "@/types";
 
 // Default: same host the page was loaded from, so it works from another device on the LAN / hotspot.
@@ -63,5 +63,12 @@ export const api = {
   usage: () => http.get<Usage>("/observability/usage").then((r) => r.data),
   simulate: (body: { previous_value: number; current_value: number; extraction_confidence: number; accounting_checks_passed: boolean }) =>
     http.post<Simulation>("/decision/simulate", body).then((r) => r.data),
+  adaptiveOverview: () => http.get<AdaptiveOverview>("/adaptive/overview").then((r) => r.data),
+  adaptiveHistory: (metric_key?: string) => http.get<{ history: AdaptiveAdjustmentDto[] }>("/adaptive/history", { params: metric_key ? { metric_key } : {} }).then((r) => r.data.history),
+  adaptiveConfig: (body: Record<string, number | string>) => http.patch("/adaptive/config", body).then((r) => r.data),
+  adaptiveSet: (key: string, value: number, reason: string) => http.post(`/adaptive/${key}/set`, { value, reason }).then((r) => r.data),
+  adaptiveReset: (key: string, reason: string) => http.post(`/adaptive/${key}/reset`, { reason }).then((r) => r.data),
+  adaptiveResetAll: (reason: string) => http.post("/adaptive/reset-all", { reason }).then((r) => r.data),
+  adaptivePause: (key: string, paused: boolean) => http.post(`/adaptive/${key}/auto`, { paused }).then((r) => r.data),
   reportUrl: (id: string, format: "pdf" | "json") => `${API_BASE}/audits/${id}/report?format=${format}`,
 };
