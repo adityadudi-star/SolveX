@@ -56,14 +56,14 @@ function ConfigPanel({ cfg, bounds, defaults }: { cfg: Record<string, number>; b
   );
 }
 
-export default function AdaptiveThresholdSection() {
+export default function AdaptiveThresholdSection({ className = "mt-10" }: { className?: string }) {
   const [trendKey, setTrendKey] = useState("all");
   const [histKey, setHistKey] = useState("");
   const ov = useQuery({ queryKey: ["adaptive", "overview"], queryFn: api.adaptiveOverview, refetchInterval: 8000 });
   const hist = useQuery({ queryKey: ["adaptive", "history", histKey], queryFn: () => api.adaptiveHistory(histKey || undefined), refetchInterval: 8000 });
 
   return (
-    <section className="mt-10" aria-labelledby="adaptive-title">
+    <section className={className} aria-labelledby="adaptive-title">
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <div>
           <h2 id="adaptive-title" className="flex items-center gap-2 text-xl font-bold text-navy-900"><Brain className="h-5 w-5" />Adaptive Threshold Engine</h2>

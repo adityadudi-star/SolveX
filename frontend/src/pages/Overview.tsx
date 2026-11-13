@@ -9,7 +9,6 @@ import { DecisionChart } from "@/components/dashboard/DecisionChart";
 import { DecisionBadge } from "@/components/audit/badges";
 import { Callout, EmptyState, ErrorBox, PageHeader } from "@/components/audit/Common";
 import { dt } from "@/utils/format";
-import AdaptiveThresholdSection from "@/components/adaptive/AdaptiveThresholdSection";
 import { cn } from "@/utils/cn";
 
 export default function Overview() {
@@ -91,7 +90,6 @@ export default function Overview() {
         </>
       )}
 
-      <AdaptiveThresholdSection />
     </>
   );
 }

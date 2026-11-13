@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NavLink, Outlet, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { BarChart3, ClipboardCheck, History, Info, LayoutDashboard, LogOut, Menu, PlayCircle, Settings, ShieldCheck, TrendingUp, X } from "lucide-react";
+import { BarChart3, Brain, ClipboardCheck, History, Info, LayoutDashboard, LogOut, Menu, PlayCircle, Settings, ShieldCheck, TrendingUp, X } from "lucide-react";
 import { Logo } from "@/components/Brand";
 import { api } from "@/services/api";
 import { useReviewer } from "@/hooks/useReviewer";
@@ -12,6 +12,7 @@ const NAV = [
   { to: "/", label: "Overview", icon: LayoutDashboard, end: true },
   { to: "/audits/new", label: "New Audit", icon: PlayCircle },
   { to: "/reviews", label: "Human Review", icon: ClipboardCheck, badge: true },
+  { to: "/adaptive", label: "Adaptive Thresholds", icon: Brain },
   { to: "/trends", label: "Historical Analysis", icon: TrendingUp },
   { to: "/audits", label: "Audit History", icon: History, end: true },
   { to: "/settings", label: "Settings & Observability", icon: Settings },

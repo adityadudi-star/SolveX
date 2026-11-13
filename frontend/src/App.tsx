@@ -13,6 +13,7 @@ const ReviewCenter = lazy(() => import("@/pages/ReviewCenter"));
 const Trends = lazy(() => import("@/pages/Trends"));
 const AuditHistory = lazy(() => import("@/pages/AuditHistory"));
 const SettingsPage = lazy(() => import("@/pages/SettingsPage"));
+const AdaptiveThresholds = lazy(() => import("@/pages/AdaptiveThresholds"));
 const About = lazy(() => import("@/pages/About"));
 
 export default function App() {
@@ -30,6 +31,7 @@ export default function App() {
           <Route path="reviews" element={<ReviewCenter />} />
           <Route path="trends" element={<Trends />} />
           <Route path="settings" element={<SettingsPage />} />
+          <Route path="adaptive" element={<AdaptiveThresholds />} />
           <Route path="about" element={<About />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
