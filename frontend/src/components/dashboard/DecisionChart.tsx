@@ -1,6 +1,7 @@
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import type { DecisionCode } from "@/types";
 import { DECISION } from "@/utils/format";
+import { useChartColors } from "@/hooks/useTheme";
 
 export const DECISION_COLORS: Record<DecisionCode, string> = {
   FULLY_PASSED: "#15803D",
@@ -9,6 +10,7 @@ export const DECISION_COLORS: Record<DecisionCode, string> = {
 };
 
 export function DecisionChart({ data }: { data: Record<DecisionCode, number> }) {
+  const ch = useChartColors();
   const rows = (Object.keys(DECISION) as DecisionCode[]).map((k) => ({ key: k, name: DECISION[k].label, value: data[k] ?? 0 }));
   const total = rows.reduce((a, r) => a + r.value, 0);
   return (
@@ -17,7 +19,7 @@ export function DecisionChart({ data }: { data: Record<DecisionCode, number> }) 
         <ResponsiveContainer>
           <PieChart>
             <Pie data={total ? rows : [{ key: "none", name: "No data", value: 1 }]} dataKey="value" innerRadius={58} outerRadius={84} paddingAngle={total ? 2 : 0} stroke="none">
-              {total ? rows.map((r) => <Cell key={r.key} fill={DECISION_COLORS[r.key]} />) : <Cell fill="#E2E8F0" />}
+              {total ? rows.map((r) => <Cell key={r.key} fill={DECISION_COLORS[r.key]} />) : <Cell fill={ch.empty} />}
             </Pie>
             {total > 0 && <Tooltip formatter={(v: number, n: string) => [v, n]} />}
           </PieChart>

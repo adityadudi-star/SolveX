@@ -37,7 +37,7 @@ export default function AuditResults() {
         </>} />
 
       <div className="mb-5 flex flex-wrap items-center gap-3">
-        {a.status === "failed" ? <span className="rounded-full border border-red-200 bg-danger-soft px-3 py-1 text-sm font-semibold text-danger">Audit failed</span> : <DecisionBadge decision={a.decision} />}
+        {a.status === "failed" ? <span className="rounded-full border border-danger-line bg-danger-soft px-3 py-1 text-sm font-semibold text-danger-fg">Audit failed</span> : <DecisionBadge decision={a.decision} />}
         <span className="text-xs text-muted-foreground">Started {dt(a.started_at)} · wall-clock {duration(a.duration_ms)} · status <b>{a.status.replace("_", " ")}</b></span>
       </div>
 
@@ -60,7 +60,7 @@ export default function AuditResults() {
       )}
 
       {overrides.length > 0 && (
-        <Callout tone="gold" icon={<ShieldAlert className="h-4 w-4 text-danger" />} className="mb-5" title="A financial value can be extracted correctly and still be unsafe to approve.">
+        <Callout tone="gold" icon={<ShieldAlert className="h-4 w-4 text-danger-fg" />} className="mb-5" title="A financial value can be extracted correctly and still be unsafe to approve.">
           {overrides.map((m) => `${m.label} (${m.confidence?.toFixed(0)}/100 confidence, ${m.anomaly_pct_change !== null ? `${m.anomaly_pct_change > 0 ? "+" : ""}${m.anomaly_pct_change.toFixed(1)}% YoY` : m.escalation_reasons[0]})`).join("; ")}
           {" "}— extraction confidence is high, but the decision engine requires a human. No model can override this.
         </Callout>
@@ -86,7 +86,7 @@ export default function AuditResults() {
           <CardHeader><CardTitle>XBRL ground-truth verification</CardTitle><CardDescription>Actual match counts for this audit — no accuracy claims beyond them.</CardDescription></CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
-              {[["Matched", x.matched, "text-pass"], ["Mismatched", x.mismatched, "text-danger"], ["Missing in XBRL", x.missing, "text-warn"], ["Unable to match", x.unable, "text-warn"], ["Metrics found", x.metrics_found, "text-navy-800"]].map(([l, v, c]) => (
+              {[["Matched", x.matched, "text-pass-fg"], ["Mismatched", x.mismatched, "text-danger-fg"], ["Missing in XBRL", x.missing, "text-warn-fg"], ["Unable to match", x.unable, "text-warn-fg"], ["Metrics found", x.metrics_found, "text-navy-800"]].map(([l, v, c]) => (
                 <div key={l as string} className="rounded-md border p-3"><div className="eyebrow">{l}</div><div className={`num mt-1 text-2xl font-bold ${c}`}>{v}</div></div>
               ))}
             </div>

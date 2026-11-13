@@ -7,7 +7,8 @@ import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Skel
 import { StatCard } from "@/components/dashboard/StatCard";
 import { DecisionChart } from "@/components/dashboard/DecisionChart";
 import { DecisionBadge } from "@/components/audit/badges";
-import { Callout, EmptyState, ErrorBox, PageHeader } from "@/components/audit/Common";
+import { Callout, EmptyState, ErrorBox } from "@/components/audit/Common";
+import { HeroBanner } from "@/components/dashboard/HeroBanner";
 import { dt } from "@/utils/format";
 import { cn } from "@/utils/cn";
 
@@ -22,8 +23,8 @@ export default function Overview() {
 
   return (
     <>
-      <PageHeader title="Overview" subtitle="Live statistics from the SolveX audit database."
-        actions={<Button asChild variant="gold"><Link to="/audits/new">Start a new audit</Link></Button>} />
+      <HeroBanner subtitle="Live statistics from the SolveX audit database."
+        action={<Button asChild variant="gold"><Link to="/audits/new">Start a new audit</Link></Button>} />
 
       {health.data && !health.data.sec.configured && (
         <Callout tone="warn" icon={<AlertTriangle className="h-4 w-4" />} title="SEC access not configured" className="mb-5">
@@ -40,7 +41,7 @@ export default function Overview() {
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">{Array.from({ length: 8 }).map((_, i) => <Skeleton key={i} className="h-28" />)}</div>
       ) : (
         <>
-          <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+          <div className="stagger grid grid-cols-2 gap-4 lg:grid-cols-4">
             <StatCard label="Companies audited" value={d.companies_audited} icon={<Building2 className="h-5 w-5" />} />
             <StatCard label="Filings processed" value={d.filings_processed} icon={<FileText className="h-5 w-5" />} hint={`${d.audits_total} audit run(s)`} />
             <StatCard label="Metrics extracted" value={d.metrics_extracted} icon={<Ruler className="h-5 w-5" />} tone="gold" />
@@ -64,9 +65,9 @@ export default function Overview() {
                         <Link to={`/audits/${a.workflow_id}`} className="flex flex-wrap items-center justify-between gap-2 py-3 hover:bg-secondary/40 -mx-2 px-2 rounded-md">
                           <div>
                             <div className="text-sm font-semibold text-navy-900">{a.company.name} <span className="font-normal text-muted-foreground">· FY{a.filing.fiscal_year} {a.filing.form}</span></div>
-                            <div className="text-xs text-muted-foreground">{dt(a.started_at)} · <span className={cn(a.status === "failed" && "font-semibold text-danger")}>{a.status.replace("_", " ")}</span></div>
+                            <div className="text-xs text-muted-foreground">{dt(a.started_at)} · <span className={cn(a.status === "failed" && "font-semibold text-danger-fg")}>{a.status.replace("_", " ")}</span></div>
                           </div>
-                          {a.status === "failed" ? <span className="text-xs font-medium text-danger">Failed — see details</span> : <DecisionBadge decision={a.decision} short />}
+                          {a.status === "failed" ? <span className="text-xs font-medium text-danger-fg">Failed — see details</span> : <DecisionBadge decision={a.decision} short />}
                         </Link>
                       </li>
                     ))}
@@ -80,7 +81,7 @@ export default function Overview() {
                 <CardTitle>Audit decision distribution</CardTitle>
                 <div className="mt-2 inline-flex rounded-md border bg-secondary p-0.5 text-xs font-semibold">
                   {(["audits", "metrics"] as const).map((v) => (
-                    <button key={v} onClick={() => setView(v)} className={cn("rounded px-3 py-1 capitalize", view === v ? "bg-white shadow-sm text-navy-800" : "text-muted-foreground")}>{v}</button>
+                    <button key={v} onClick={() => setView(v)} className={cn("rounded px-3 py-1 capitalize", view === v ? "bg-surface shadow-sm text-navy-800" : "text-muted-foreground")}>{v}</button>
                   ))}
                 </div>
               </CardHeader>

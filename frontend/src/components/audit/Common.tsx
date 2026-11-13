@@ -28,8 +28,8 @@ export function EmptyState({ title, body, action }: { title: string; body?: Reac
 
 export function Callout({ tone = "navy", icon, title, children, className }: { tone?: "navy" | "warn" | "danger" | "pass" | "gold"; icon?: ReactNode; title?: string; children: ReactNode; className?: string }) {
   const t = {
-    navy: "border-navy-200 bg-navy-50 text-navy-800", warn: "border-amber-200 bg-warn-soft text-amber-900",
-    danger: "border-red-200 bg-danger-soft text-red-900", pass: "border-green-200 bg-pass-soft text-green-900", gold: "border-gold-100 bg-gold-50 text-navy-900",
+    navy: "border-navy-200 bg-navy-50 text-navy-800", warn: "border-warn-line bg-warn-soft text-warn-ink",
+    danger: "border-danger-line bg-danger-soft text-danger-ink", pass: "border-pass-line bg-pass-soft text-pass-ink", gold: "border-gold-100 bg-gold-50 text-navy-900",
   }[tone];
   return (
     <div className={cn("flex gap-3 rounded-lg border p-4 text-sm", t, className)}>

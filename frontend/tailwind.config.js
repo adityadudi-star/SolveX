@@ -1,5 +1,8 @@
 /** @type {import('tailwindcss').Config} */
+// Colours are CSS variables (RGB triplets) so the whole UI re-themes by swapping variables (see src/index.css).
+const v = (name) => `rgb(var(--${name}) / <alpha-value>)`;
 export default {
+  darkMode: "class",
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
@@ -13,15 +16,26 @@ export default {
         secondary: { DEFAULT: "hsl(var(--secondary))", foreground: "hsl(var(--secondary-foreground))" },
         muted: { DEFAULT: "hsl(var(--muted))", foreground: "hsl(var(--muted-foreground))" },
         card: { DEFAULT: "hsl(var(--card))", foreground: "hsl(var(--card-foreground))" },
-        navy: { 50: "#F1F4FA", 100: "#E1E7F3", 200: "#C3CFE6", 600: "#1B3A7A", 700: "#12295C", 800: "#0D1F4A", 900: "#0A1838" },
-        gold: { 50: "#FBF6E6", 100: "#F5E9BF", 400: "#D9AE35", 500: "#C9971C", 600: "#A97B12" },
-        pass: { DEFAULT: "#15803D", soft: "#E8F5EC" },
-        warn: { DEFAULT: "#B45309", soft: "#FEF3E2" },
-        danger: { DEFAULT: "#B91C1C", soft: "#FDECEC" },
+        surface: v("surface"),
+        overlay: v("overlay"),
+        brand: { DEFAULT: v("brand"), hover: v("brand-hover") },
+        navy: { 50: v("navy-50"), 100: v("navy-100"), 200: v("navy-200"), 600: v("navy-600"), 700: v("navy-700"), 800: v("navy-800"), 900: v("navy-900") },
+        gold: { 50: v("gold-50"), 100: v("gold-100"), 400: v("gold-400"), 500: v("gold-500"), 600: v("gold-600") },
+        pass: { DEFAULT: v("pass"), soft: v("pass-soft"), fg: v("pass-fg"), line: v("pass-line"), ink: v("pass-ink") },
+        warn: { DEFAULT: v("warn"), soft: v("warn-soft"), fg: v("warn-fg"), line: v("warn-line"), ink: v("warn-ink") },
+        danger: { DEFAULT: v("danger"), soft: v("danger-soft"), fg: v("danger-fg"), line: v("danger-line"), ink: v("danger-ink") },
       },
       borderRadius: { lg: "0.75rem", md: "0.5rem", sm: "0.375rem" },
       fontFamily: { sans: ["Inter", "ui-sans-serif", "system-ui", "Segoe UI", "sans-serif"] },
-      boxShadow: { glow: "0 0 0 1px rgba(201,151,28,0.35), 0 6px 28px rgba(201,151,28,0.22)", "glow-navy": "0 0 22px rgba(27,58,122,0.35)", card: "0 1px 2px rgba(10,24,56,0.04), 0 4px 16px rgba(10,24,56,0.05)" },
+      boxShadow: {
+        glow: "0 0 0 1px rgba(201,151,28,0.35), 0 6px 28px rgba(201,151,28,0.22)",
+        "glow-navy": "0 0 22px rgba(27,58,122,0.35)",
+        card: "0 1px 2px rgba(10,24,56,0.04), 0 4px 16px rgba(10,24,56,0.05)",
+      },
+      keyframes: {
+        "fade-up": { from: { opacity: "0", transform: "translateY(12px)" }, to: { opacity: "1", transform: "none" } },
+      },
+      animation: { "fade-up": "fade-up .5s cubic-bezier(.22,1,.36,1) backwards" },
     },
   },
   plugins: [],

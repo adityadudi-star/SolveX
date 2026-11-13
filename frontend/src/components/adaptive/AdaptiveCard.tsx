@@ -72,22 +72,22 @@ export function AdaptiveCard({ m }: { m: AdaptiveMetric }) {
   const w = m.window;
   const moved = m.current !== m.default;
   return (
-    <div className="rounded-lg border bg-card p-5">
+    <div className="card-glass card-hover rounded-lg border bg-card p-5">
       <div className="flex items-center justify-between gap-2">
-        <h4 className="truncate text-[15px] font-semibold text-navy-900">{m.label}</h4>
+        <h4 className="truncate text-[15px] font-semibold text-foreground">{m.label}</h4>
         <SourceBadge m={m} />
       </div>
 
       <div className="mt-4 flex items-center gap-3">
-        <div className="flex-1 rounded-md border bg-white/50 px-3 py-2"><div className="text-[11px] text-muted-foreground">Previous</div><div className="num text-xl font-semibold text-navy-800/60">{prev}%</div></div>
-        <div className={cn("flex-1 rounded-md border px-3 py-2", m.source === "auto" ? "border-pass/60 bg-pass-soft" : "bg-white/70")}>
-          <div className="text-[11px] text-muted-foreground">Current</div><div className={cn("num text-xl font-semibold", m.source === "auto" ? "text-pass" : "text-navy-900")}>{m.current}%</div></div>
+        <div className="flex-1 rounded-md border bg-surface/50 px-3 py-2"><div className="text-[11px] text-muted-foreground">Previous</div><div className="num text-xl font-semibold text-muted-foreground">{prev}%</div></div>
+        <div className={cn("flex-1 rounded-md border px-3 py-2", m.source === "auto" ? "border-pass/60 bg-pass-soft" : "bg-surface/70")}>
+          <div className="text-[11px] text-muted-foreground">Current</div><div className={cn("num text-xl font-semibold", m.source === "auto" ? "text-pass-fg" : "text-foreground")}>{m.current}%</div></div>
       </div>
       {moved && <ThresholdTrack original={m.default} current={m.current} />}
 
       {tuned ? (
         <div className="mt-4 border-t pt-3">
-          <p className="flex items-center gap-1.5 text-sm font-semibold text-pass"><CheckCircle2 className="h-4 w-4" />Auto-tuned from reviewer feedback</p>
+          <p className="flex items-center gap-1.5 text-sm font-semibold text-pass-fg"><CheckCircle2 className="h-4 w-4" />Auto-tuned from reviewer feedback</p>
           <p className="num mt-1 text-xs text-muted-foreground">{m.last_auto!.reviews_considered} reviews · {m.last_auto!.approval_rate}% approved</p>
         </div>
       ) : m.source === "manual" ? (

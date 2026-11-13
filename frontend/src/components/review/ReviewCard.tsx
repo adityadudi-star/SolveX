@@ -91,7 +91,7 @@ export function ReviewCard({ m, onDone }: { m: Metric; onDone: (msg: string) => 
                 <Input id="cv" value={val} onChange={(e) => setVal(e.target.value)} placeholder="e.g. 1,250,000,000 or 1250M or 1.25B" />
                 {val && <div className="text-xs text-muted-foreground">{parsed === null ? "Not a valid amount." : `Interpreted as ${money(parsed, m.currency)} (${fullNumber(parsed)})`}</div>}</div>
             )}
-            <div className="space-y-1.5"><Label htmlFor="rn">Reviewer notes {needsNotes ? <span className="text-danger">*required</span> : "(optional)"}</Label>
+            <div className="space-y-1.5"><Label htmlFor="rn">Reviewer notes {needsNotes ? <span className="text-danger-fg">*required</span> : "(optional)"}</Label>
               <Textarea id="rn" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder={needsNotes ? "Explain the basis for your decision…" : "Optional context…"} /></div>
             {mut.isError && <Callout tone="danger">{errMsg(mut.error)}</Callout>}
             <div className="flex justify-end gap-2">

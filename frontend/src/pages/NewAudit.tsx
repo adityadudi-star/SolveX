@@ -33,14 +33,6 @@ export default function NewAudit() {
   });
   const { snap, transport } = useAuditProgress(wid);
 
-  useEffect(() => {
-    if (!snap || !wid) return;
-    if (snap.status === "completed" || snap.status === "awaiting_review") {
-      const t = setTimeout(() => nav(`/audits/${wid}`), 1200);
-      return () => clearTimeout(t);
-    }
-  }, [snap, wid, nav]);
-
   const filingList = useMemo(() => filings.data?.filings ?? [], [filings.data]);
   useEffect(() => { if (filingList.length && !filing) setFiling(filingList[0]); }, [filingList, filing]);
 
@@ -63,7 +55,7 @@ export default function NewAudit() {
               <div className="mt-3 flex flex-wrap gap-2">
                 {QUICK.map((c) => (
                   <button key={c.q} disabled={running} onClick={() => { setCompany(null); setFiling(null); setQ(c.q); }}
-                    className="rounded-full border bg-white px-3 py-1 text-xs font-semibold text-navy-800 hover:bg-navy-50 disabled:opacity-50">{c.label}</button>
+                    className="rounded-full border bg-surface px-3 py-1 text-xs font-semibold text-navy-800 hover:bg-navy-50 disabled:opacity-50">{c.label}</button>
                 ))}
               </div>
               {search.isError && <div className="mt-3"><ErrorBox message={errMsg(search.error)} /></div>}
@@ -127,8 +119,18 @@ export default function NewAudit() {
               <>
                 <ProgressTimeline stages={snap.stages} transport={transport} />
                 {snap.status === "failed" && <div className="mt-4"><ErrorBox message={snap.error ?? "The audit failed."} /><p className="mt-2 text-xs text-muted-foreground">No results were fabricated. <Link className="underline" to={`/audits/${wid}`}>View failed run</Link></p></div>}
-                {snap.status === "awaiting_review" && <Callout tone="danger" className="mt-4" title="Paused for human review">Workflow checkpointed. Opening results…</Callout>}
-                {snap.status === "completed" && <Callout tone="pass" className="mt-4" title="Audit complete">Opening results…</Callout>}
+                {snap.status === "awaiting_review" && (
+                  <Callout tone="danger" className="mt-4" title="Paused for human review">
+                    All 9 stages are done and the workflow is checkpointed. Read the stage details above, then continue when you are ready.
+                    <Button className="mt-3 w-full" variant="gold" onClick={() => nav(`/audits/${wid}`)}>Continue to human review</Button>
+                  </Callout>
+                )}
+                {snap.status === "completed" && (
+                  <Callout tone="pass" className="mt-4" title="Audit complete">
+                    All 9 stages are done. Read the stage details above, then open the results.
+                    <Button className="mt-3 w-full" variant="gold" onClick={() => nav(`/audits/${wid}`)}>View results</Button>
+                  </Callout>
+                )}
               </>
             ) : <div className="flex items-center gap-2 text-sm text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" />Connecting…</div>}
           </CardContent>

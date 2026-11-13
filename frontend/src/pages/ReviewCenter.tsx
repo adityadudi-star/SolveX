@@ -21,7 +21,7 @@ export default function ReviewCenter() {
       {flash && <Callout tone="pass" icon={<CheckCircle2 className="h-4 w-4" />} className="mb-4">{flash}</Callout>}
       <div className="mb-5 inline-flex rounded-md border bg-secondary p-0.5 text-sm font-semibold">
         {([["queue", `Review queue${pending.data ? ` (${pending.data.count})` : ""}`], ["history", "Decision history"]] as const).map(([k, l]) => (
-          <button key={k} onClick={() => setTab(k)} className={cn("rounded px-4 py-1.5", tab === k ? "bg-white text-navy-800 shadow-sm" : "text-muted-foreground")}>{l}</button>
+          <button key={k} onClick={() => setTab(k)} className={cn("rounded px-4 py-1.5", tab === k ? "bg-surface text-navy-800 shadow-sm" : "text-muted-foreground")}>{l}</button>
         ))}
       </div>
 

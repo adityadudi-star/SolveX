@@ -4,6 +4,7 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { cva, type VariantProps } from "class-variance-authority";
 import { X } from "lucide-react";
 import { cn } from "@/utils/cn";
+import { useReveal } from "@/hooks/useReveal";
 
 /* ---------- Button (shadcn/ui pattern) ---------- */
 const buttonVariants = cva(
@@ -11,9 +12,9 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-navy-800 text-white hover:bg-navy-700 shadow-sm",
+        default: "bg-brand text-white hover:bg-brand-hover shadow-sm",
         gold: "bg-gold-500 text-navy-900 hover:bg-gold-400 shadow-sm",
-        outline: "border border-input bg-white text-foreground hover:bg-secondary",
+        outline: "border border-input bg-surface text-foreground hover:bg-secondary",
         ghost: "text-foreground hover:bg-secondary",
         pass: "bg-pass text-white hover:bg-green-800",
         danger: "bg-danger text-white hover:bg-red-800",
@@ -32,9 +33,11 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({ classN
 Button.displayName = "Button";
 
 /* ---------- Card ---------- */
-export const Card = ({ className, ...p }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("rounded-lg border bg-card text-card-foreground shadow-card", className)} {...p} />
-);
+/** Glass card: scroll-reveals once on entering the viewport and lifts on hover (CSS in index.css). */
+export const Card = ({ className, ...p }: React.HTMLAttributes<HTMLDivElement>) => {
+  const ref = useReveal<HTMLDivElement>();
+  return <div ref={ref} className={cn("card-glass card-hover rounded-lg border bg-card text-card-foreground shadow-card", className)} {...p} />;
+};
 export const CardHeader = ({ className, ...p }: React.HTMLAttributes<HTMLDivElement>) => <div className={cn("flex flex-col gap-1 p-5 pb-3", className)} {...p} />;
 export const CardTitle = ({ className, ...p }: React.HTMLAttributes<HTMLHeadingElement>) => <h3 className={cn("text-[15px] font-semibold leading-tight", className)} {...p} />;
 export const CardDescription = ({ className, ...p }: React.HTMLAttributes<HTMLParagraphElement>) => <p className={cn("text-sm text-muted-foreground", className)} {...p} />;
@@ -45,9 +48,9 @@ const badgeVariants = cva("inline-flex items-center gap-1 rounded-full border px
   variants: {
     tone: {
       neutral: "border-border bg-secondary text-foreground",
-      pass: "border-green-200 bg-pass-soft text-pass",
-      warn: "border-amber-200 bg-warn-soft text-warn",
-      danger: "border-red-200 bg-danger-soft text-danger",
+      pass: "border-pass-line bg-pass-soft text-pass-fg",
+      warn: "border-warn-line bg-warn-soft text-warn-fg",
+      danger: "border-danger-line bg-danger-soft text-danger-fg",
       navy: "border-navy-200 bg-navy-50 text-navy-700",
       gold: "border-gold-100 bg-gold-50 text-gold-600",
     },
@@ -60,16 +63,16 @@ export const Badge = ({ className, tone, ...p }: React.HTMLAttributes<HTMLSpanEl
 
 /* ---------- Form ---------- */
 export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(({ className, ...p }, ref) => (
-  <input ref={ref} className={cn("flex h-9 w-full rounded-md border border-input bg-white px-3 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50", className)} {...p} />
+  <input ref={ref} className={cn("flex h-9 w-full rounded-md border border-input bg-surface px-3 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50", className)} {...p} />
 ));
 Input.displayName = "Input";
 export const Textarea = React.forwardRef<HTMLTextAreaElement, React.TextareaHTMLAttributes<HTMLTextAreaElement>>(({ className, ...p }, ref) => (
-  <textarea ref={ref} className={cn("flex min-h-[84px] w-full rounded-md border border-input bg-white px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring", className)} {...p} />
+  <textarea ref={ref} className={cn("flex min-h-[84px] w-full rounded-md border border-input bg-surface px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring", className)} {...p} />
 ));
 Textarea.displayName = "Textarea";
 export const Label = ({ className, ...p }: React.LabelHTMLAttributes<HTMLLabelElement>) => <label className={cn("text-sm font-medium", className)} {...p} />;
 export const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttributes<HTMLSelectElement>>(({ className, ...p }, ref) => (
-  <select ref={ref} className={cn("flex h-9 w-full rounded-md border border-input bg-white px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring", className)} {...p} />
+  <select ref={ref} className={cn("flex h-9 w-full rounded-md border border-input bg-surface px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring", className)} {...p} />
 ));
 Select.displayName = "Select";
 
@@ -88,8 +91,8 @@ export const DialogTrigger = DialogPrimitive.Trigger;
 export const DialogClose = DialogPrimitive.Close;
 export const DialogContent = ({ className, children, ...p }: React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>) => (
   <DialogPrimitive.Portal>
-    <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-navy-900/50 backdrop-blur-[1px]" />
-    <DialogPrimitive.Content className={cn("fixed left-1/2 top-1/2 z-50 w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-lg border bg-white p-6 shadow-xl focus:outline-none", className)} {...p}>
+    <DialogPrimitive.Overlay className="fade-enter fixed inset-0 z-50 bg-overlay/50 backdrop-blur-sm" />
+    <DialogPrimitive.Content className={cn("dialog-enter fixed left-1/2 top-1/2 z-50 w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-lg border bg-surface p-6 shadow-xl focus:outline-none", className)} {...p}>
       {children}
       <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-60 hover:opacity-100" aria-label="Close"><X className="h-4 w-4" /></DialogPrimitive.Close>
     </DialogPrimitive.Content>

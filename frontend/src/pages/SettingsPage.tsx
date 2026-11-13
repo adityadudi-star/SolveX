@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useChartColors } from "@/hooks/useTheme";
 import { useLocation } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Activity, Cpu, Lock, Network, Play, SlidersHorizontal } from "lucide-react";
@@ -93,6 +94,7 @@ function Simulator() {
 }
 
 function Observability() {
+  const ch = useChartColors();
   const u = useQuery({ queryKey: ["usage"], queryFn: api.usage, refetchInterval: 10000 });
   const health = useQuery({ queryKey: ["health-live"], queryFn: () => api.health(true), enabled: false });
   if (u.isLoading || !u.data) return <Skeleton className="h-64" />;
@@ -106,7 +108,7 @@ function Observability() {
           <div className="flex items-center gap-2"><StatusPill value={sec.status === "ok" ? "passed" : sec.status === "error" ? "failed" : "warning"} /><span className="capitalize">{sec.status.replace("_", " ")}</span></div>
           <div className="text-xs text-muted-foreground">Requests: {d.sec.requests} · retries: {d.sec.retries} · cache hits: {d.sec.cache_hits}</div>
           {"latency_ms" in sec && sec.latency_ms !== undefined && <div className="text-xs">Live latency: {sec.latency_ms} ms</div>}
-          {"last_error" in sec && sec.last_error && <div className="text-xs text-danger">Last error: {sec.last_error}</div>}
+          {"last_error" in sec && sec.last_error && <div className="text-xs text-danger-fg">Last error: {sec.last_error}</div>}
           {!d.sec.configured && <Callout tone="warn">SEC_CONTACT_EMAIL is not set in backend/.env.</Callout>}
           <Button variant="outline" size="sm" onClick={() => health.refetch()} disabled={health.isFetching || !d.sec.configured}><Activity className="h-3.5 w-3.5" />{health.isFetching ? "Checking…" : "Run live check"}</Button>
         </CardContent></Card>
@@ -120,8 +122,8 @@ function Observability() {
       </div>
       <Card><CardHeader><CardTitle>Workflow execution time</CardTitle><CardDescription>Compute time excludes time spent waiting for a human reviewer.</CardDescription></CardHeader><CardContent>
         {chart.length === 0 ? <p className="text-sm text-muted-foreground">No completed workflows yet.</p> : (
-          <div className="h-60"><ResponsiveContainer><BarChart data={chart}><CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" /><XAxis dataKey="name" tick={{ fontSize: 11 }} /><YAxis tick={{ fontSize: 11 }} width={56} tickFormatter={(v) => duration(v)} />
-            <Tooltip formatter={(v: number) => duration(v)} /><Bar dataKey="compute" name="Compute" fill="#12295C" radius={[3, 3, 0, 0]} /><Bar dataKey="wall" name="Wall-clock" fill="#C9971C" radius={[3, 3, 0, 0]} /></BarChart></ResponsiveContainer></div>)}
+          <div className="h-60"><ResponsiveContainer><BarChart data={chart}><CartesianGrid strokeDasharray="3 3" vertical={false} stroke={ch.grid} /><XAxis dataKey="name" tick={{ fontSize: 11 }} /><YAxis tick={{ fontSize: 11 }} width={56} tickFormatter={(v) => duration(v)} />
+            <Tooltip formatter={(v: number) => duration(v)} /><Bar dataKey="compute" name="Compute" fill={ch.series[0]} radius={[3, 3, 0, 0]} /><Bar dataKey="wall" name="Wall-clock" fill={ch.series[1]} radius={[3, 3, 0, 0]} /></BarChart></ResponsiveContainer></div>)}
         {d.workflows.length > 0 && <Table className="mt-3"><THead><tr><TH>Audit</TH><TH>Status</TH><TH>Compute</TH><TH>Wall-clock</TH><TH>SEC requests</TH><TH>Retries</TH><TH>Cache hits</TH></tr></THead>
           <tbody>{d.workflows.map((w) => <TR key={w.workflow_id}><TD>{w.company} FY{w.fiscal_year}</TD><TD className="capitalize">{w.status.replace("_", " ")}</TD><TD className="num">{duration(w.compute_ms)}</TD><TD className="num">{duration(w.wall_clock_ms)}</TD><TD className="num">{w.sec_requests}</TD><TD className="num">{w.sec_retries}</TD><TD className="num">{w.cache_hits}</TD></TR>)}</tbody></Table>}
       </CardContent></Card>

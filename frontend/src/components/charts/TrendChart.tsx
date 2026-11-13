@@ -1,8 +1,7 @@
 import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import type { Trends } from "@/types";
 import { money } from "@/utils/format";
-
-const COLORS = ["#12295C", "#C9971C", "#15803D", "#B91C1C"];
+import { useChartColors } from "@/hooks/useTheme";
 
 function merge(t: Trends, keys: string[]) {
   const years = new Set<number>();
@@ -15,14 +14,16 @@ function merge(t: Trends, keys: string[]) {
 }
 
 export function TrendChart({ trends, keys, kind = "line" }: { trends: Trends; keys: string[]; kind?: "line" | "bar" }) {
+  const ch = useChartColors();
+  const COLORS = ch.series;
   const present = keys.filter((k) => trends.series[k]);
   if (present.length === 0) return <div className="flex h-64 items-center justify-center text-sm text-muted-foreground">No stored data for this chart.</div>;
   const data = merge(trends, present);
   const common = (
     <>
-      <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" vertical={false} />
-      <XAxis dataKey="year" tick={{ fontSize: 12 }} stroke="#94A3B8" />
-      <YAxis tickFormatter={(v) => money(v).replace("$", "")} tick={{ fontSize: 12 }} stroke="#94A3B8" width={64} />
+      <CartesianGrid strokeDasharray="3 3" stroke={ch.grid} vertical={false} />
+      <XAxis dataKey="year" tick={{ fontSize: 12 }} stroke={ch.axis} />
+      <YAxis tickFormatter={(v) => money(v).replace("$", "")} tick={{ fontSize: 12 }} stroke={ch.axis} width={64} />
       <Tooltip formatter={(v: number, n: string) => [money(v), trends.series[n]?.label ?? n]} />
       <Legend formatter={(n) => trends.series[n as string]?.label ?? n} />
     </>

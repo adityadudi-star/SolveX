@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useChartColors } from "@/hooks/useTheme";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Brain, Settings2, Sparkles, Undo2 } from "lucide-react";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
@@ -57,6 +58,7 @@ function ConfigPanel({ cfg, bounds, defaults }: { cfg: Record<string, number>; b
 }
 
 export default function AdaptiveThresholdSection({ className = "mt-10" }: { className?: string }) {
+  const ch = useChartColors();
   const [trendKey, setTrendKey] = useState("all");
   const [histKey, setHistKey] = useState("");
   const ov = useQuery({ queryKey: ["adaptive", "overview"], queryFn: api.adaptiveOverview, refetchInterval: 8000 });
@@ -91,9 +93,9 @@ export default function AdaptiveThresholdSection({ className = "mt-10" }: { clas
             <CardContent>
               {(ov.data.trend[trendKey] ?? []).length === 0 ? <p className="py-8 text-center text-sm text-muted-foreground">No reviewer feedback recorded yet. Approvals and rejections in the Human Review Center appear here.</p> : (
                 <div className="h-56"><ResponsiveContainer><LineChart data={ov.data.trend[trendKey]}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" vertical={false} /><XAxis dataKey="n" tick={{ fontSize: 11 }} label={{ value: "review #", position: "insideBottom", offset: -2, fontSize: 11 }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke={ch.grid} vertical={false} /><XAxis dataKey="n" tick={{ fontSize: 11 }} label={{ value: "review #", position: "insideBottom", offset: -2, fontSize: 11 }} />
                   <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} tickFormatter={(v) => `${v}%`} width={44} /><Tooltip formatter={(v: number) => [`${v}%`, "Approval rate"]} labelFormatter={(n) => `After review #${n}`} />
-                  <Line type="monotone" dataKey="rate" stroke="#15803D" strokeWidth={2.5} dot={{ r: 3 }} /></LineChart></ResponsiveContainer></div>
+                  <Line type="monotone" dataKey="rate" stroke={ch.series[2]} strokeWidth={2.5} dot={{ r: 3 }} /></LineChart></ResponsiveContainer></div>
               )}
             </CardContent>
           </Card>

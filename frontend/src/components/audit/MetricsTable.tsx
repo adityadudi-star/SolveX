@@ -22,7 +22,7 @@ export function MetricsTable({ metrics, workflowId }: { metrics: Metric[]; workf
                   {m.final_value !== null && <div className="text-xs text-navy-600">reviewed: {money(m.final_value, m.currency)}</div>}
                   <div className="text-[11px] text-muted-foreground">as shown: {m.raw_text}</div>
                 </div>
-              ) : <span className="rounded bg-warn-soft px-1.5 py-0.5 text-xs font-semibold text-warn">MISSING</span>}
+              ) : <span className="rounded bg-warn-soft px-1.5 py-0.5 text-xs font-semibold text-warn-fg">MISSING</span>}
             </TD>
             <TD className="whitespace-nowrap text-xs">{m.found ? <>{m.currency ?? "n/a"} · {m.scale === 6 ? "millions" : m.scale === 3 ? "thousands" : m.scale === 9 ? "billions" : m.scale === 0 ? "units" : "scale n/s"}
               <div className="text-muted-foreground">{m.period_end} ({m.period_type})</div></> : "—"}</TD>

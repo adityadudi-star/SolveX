@@ -4,8 +4,29 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#cfe0f3" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#060b1a" media="(prefers-color-scheme: dark)" />
     <meta name="description" content="SolveX Financial Auditor — an intelligent human-in-the-loop financial filing auditing platform. Extract the Facts. Investigate the Trust." />
-    <meta name="theme-color" content="#0B1F4B" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="SolveX" />
+    <meta property="og:title" content="SolveX | Intelligent Financial Filing Auditor" />
+    <meta property="og:description" content="Extract the Facts. Investigate the Trust. Real SEC 10-K filings, XBRL verification and mandatory human review." />
+    <meta property="og:image" content="/solvex-logo.png" />
+    <meta name="twitter:card" content="summary" />
+    <!-- Apply the saved / OS theme before first paint so the wrong theme never flashes. -->
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("solvex-theme");
+          if (t !== "light" && t !== "dark") t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          var d = document.documentElement;
+          d.classList.toggle("dark", t === "dark");
+          d.style.colorScheme = t;
+          d.style.backgroundColor = t === "dark" ? "#060b1a" : "#cfe0f3";
+        } catch (e) {}
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -13,6 +34,7 @@
   </head>
   <body>
     <div id="root"></div>
+    <noscript>SolveX Financial Auditor needs JavaScript to run.</noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

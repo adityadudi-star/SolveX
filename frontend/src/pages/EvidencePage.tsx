@@ -57,7 +57,7 @@ export default function EvidencePage() {
             <Row k="Reporting period">{f.reporting_period?.start ? `${f.reporting_period.start} → ` : ""}{f.reporting_period?.end} <span className="text-muted-foreground">({f.reporting_period?.type})</span></Row>
             <Row k="XBRL concept (in filing)"><code className="text-xs">{f.xbrl_concept_in_filing}</code></Row>
             <Row k="Extraction method"><Badge tone="navy">{f.extraction_method?.replaceAll("_", " ") ?? "n/a"}</Badge> <span className="ml-1 text-xs text-muted-foreground">evidence re-verified: {f.evidence_verified ? "yes" : "no"}</span>
-              {[...(f.evidence_notes ?? []), ...(f.extraction_notes ?? [])].map((n: string, i: number) => <div key={i} className="mt-1 text-xs text-warn">⚠ {n}</div>)}</Row>
+              {[...(f.evidence_notes ?? []), ...(f.extraction_notes ?? [])].map((n: string, i: number) => <div key={i} className="mt-1 text-xs text-warn-fg">⚠ {n}</div>)}</Row>
           </dl>
         </CardContent>
       </Card>
@@ -106,7 +106,7 @@ export default function EvidencePage() {
               </div>
             ) : <p className="text-sm text-muted-foreground">No anomaly record.</p>}
             {(hist.history ?? []).length > 0 && <p className="mt-2 text-xs text-muted-foreground">Prior annual values (XBRL): {hist.history.map((p: any) => `${p.end}: ${money(p.value)}`).join(" · ")}</p>}
-            {(hist.restatements ?? []).length > 0 && <p className="mt-1 text-xs text-warn">Restatement detected: {hist.restatements.map((r: any) => `${r.period_end} originally ${money(r.originally_reported)}, now ${money(r.as_presented_now)}`).join("; ")}</p>}
+            {(hist.restatements ?? []).length > 0 && <p className="mt-1 text-xs text-warn-fg">Restatement detected: {hist.restatements.map((r: any) => `${r.period_end} originally ${money(r.originally_reported)}, now ${money(r.as_presented_now)}`).join("; ")}</p>}
           </section>
 
           <section>
@@ -131,7 +131,7 @@ export default function EvidencePage() {
 
       {/* ---------- 3. AI EXPLANATION ---------- */}
       <Card className="mb-5 border-l-4 border-l-slate-400">
-        <CardHeader><CardTitle className="flex items-center gap-2"><Bot className="h-4 w-4 text-slate-600" />Explanation <Badge>{e.ai_explanation?.source === "llm" ? `AI-generated · ${e.ai_explanation.model}` : "Deterministic template · no LLM used"}</Badge></CardTitle>
+        <CardHeader><CardTitle className="flex items-center gap-2"><Bot className="h-4 w-4 text-muted-foreground" />Explanation <Badge>{e.ai_explanation?.source === "llm" ? `AI-generated · ${e.ai_explanation.model}` : "Deterministic template · no LLM used"}</Badge></CardTitle>
           <CardDescription>{e.ai_explanation?.note}</CardDescription></CardHeader>
         <CardContent><p className="text-sm leading-relaxed">{e.ai_explanation?.text}</p>
           <p className="mt-3 text-xs text-muted-foreground">{e.separation_note}</p></CardContent>
