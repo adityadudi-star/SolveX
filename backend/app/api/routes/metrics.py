@@ -85,7 +85,10 @@ def _act(action: str, metric_id: int, body: ReviewActionBody, reviewer: Reviewer
     if wf.status == "awaiting_review" and pending_left == 0:
         get_runner().resume_async(wf.id)
         resumed = True
-    return {"review": review_dict(ev), "pending_remaining": pending_left, "workflow_resumed": resumed}
+    adj = getattr(ev, "adaptive_adjustment", None)
+    return {"review": review_dict(ev), "pending_remaining": pending_left, "workflow_resumed": resumed,
+            "adaptive": {"adjusted": None if adj is None else {"metric": adj.metric_key, "previous": adj.previous_threshold,
+                                                              "new": adj.new_threshold, "reason": adj.reason}}}
 
 
 @router.post("/reviews/{metric_id}/approve")

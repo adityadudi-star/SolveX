@@ -33,6 +33,32 @@ class ThresholdPatch(BaseModel):
     reason: str | None = Field(None, max_length=1000)
 
 
+class AdaptiveConfigPatch(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    auto_tuning_enabled: float | None = None
+    min_reviews: float | None = None
+    min_approval_rate: float | None = None
+    step: float | None = None
+    min_threshold: float | None = None
+    max_threshold: float | None = None
+    window_width: float | None = None
+    cooldown_minutes: float | None = None
+    reason: str | None = Field(None, max_length=1000)
+
+
+class AdaptiveManualSet(BaseModel):
+    value: float
+    reason: str = Field(..., min_length=3, max_length=1000)
+
+
+class AdaptiveReason(BaseModel):
+    reason: str = Field("", max_length=1000)
+
+
+class AdaptivePause(BaseModel):
+    paused: bool
+
+
 class SimulateRequest(BaseModel):
     previous_value: float
     current_value: float

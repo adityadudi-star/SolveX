@@ -38,6 +38,11 @@ def apply_review(db: Session, metric_id: int, action: str, reviewer: str, notes:
     if action == "correct":
         m.final_value = corrected_value          # `value` (original) is untouched
     db.flush()
+    # Adaptive Threshold Engine: log the feedback and, if the learning conditions are met, tune this metric's threshold
+    from app.services import adaptive_service
+    adaptive_service.record_feedback(db, m, ev)
+    adj = adaptive_service.maybe_autotune(db, m.metric_key)
+    ev.adaptive_adjustment = adj                      # transient attribute for the API response
     pending = db.query(MetricResult).filter_by(workflow_id=m.workflow_id, review_status="pending").count()
     db.commit()
     _ = wf

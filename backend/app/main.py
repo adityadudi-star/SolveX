@@ -7,7 +7,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import audits, metrics, system
+from app.api.routes import adaptive, audits, metrics, system
 from app.config import APP_DESCRIPTION, APP_NAME, APP_TAGLINE, APP_VERSION, get_settings
 from app.database.migrate import ensure_schema
 from app.database.session import init_engine
@@ -34,7 +34,7 @@ app.add_middleware(
     # also allow the UI opened from another device on the same private network (hotspot / LAN) — private ranges only
     allow_origin_regex=r"^http://(localhost|127\.0\.0\.1|10\.\d+\.\d+\.\d+|192\.168\.\d+\.\d+|172\.(1[6-9]|2\d|3[01])\.\d+\.\d+):5173$",
 )
-for r in (system.router, audits.router, metrics.router):
+for r in (system.router, audits.router, metrics.router, adaptive.router):
     app.include_router(r, prefix="/api")
 
 

@@ -235,6 +235,57 @@ class Setting(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
 
 
+class AdaptiveThreshold(Base):
+    """Per-metric review-confidence floor. `default_threshold` is the original reference and is never overwritten."""
+    __tablename__ = "adaptive_thresholds"
+    metric_key: Mapped[str] = mapped_column(String(48), primary_key=True)
+    default_threshold: Mapped[float] = mapped_column(Float)
+    current_threshold: Mapped[float] = mapped_column(Float)
+    previous_threshold: Mapped[float | None] = mapped_column(Float)
+    source: Mapped[str] = mapped_column(String(12), default="default")   # default | auto | manual
+    auto_paused: Mapped[bool] = mapped_column(Boolean, default=False)    # per-metric pause of auto-tuning
+    epoch: Mapped[int] = mapped_column(Integer, default=0)               # bumps on every change; feedback is evaluated per epoch
+    adjustments_count: Mapped[int] = mapped_column(Integer, default=0)   # automatic adjustments only
+    last_adjusted_at: Mapped[datetime | None] = mapped_column(DateTime)
+    last_adjustment_kind: Mapped[str | None] = mapped_column(String(12))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+
+
+class AdaptiveFeedback(Base):
+    """APPEND-ONLY reviewer feedback used for learning. One row per reviewed metric (duplicates impossible)."""
+    __tablename__ = "adaptive_feedback"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    metric_id: Mapped[int] = mapped_column(ForeignKey("metric_results.id"), unique=True)
+    workflow_id: Mapped[str] = mapped_column(ForeignKey("audit_workflows.id"), index=True)
+    metric_key: Mapped[str] = mapped_column(String(48), index=True)
+    confidence: Mapped[float | None] = mapped_column(Float)
+    threshold_at_decision: Mapped[float | None] = mapped_column(Float)  # threshold ACTIVE when the item was flagged
+    epoch: Mapped[int | None] = mapped_column(Integer)
+    action: Mapped[str] = mapped_column(String(12))                     # approve | correct | reject
+    reviewer: Mapped[str] = mapped_column(String(96))
+    eligible: Mapped[bool] = mapped_column(Boolean, default=False)      # flagged ONLY because of low confidence
+    note: Mapped[str | None] = mapped_column(String(255))
+    ts: Mapped[datetime] = mapped_column(DateTime, default=utcnow, index=True)
+
+
+class AdaptiveAdjustment(Base):
+    """APPEND-ONLY audit log of every threshold change (auto, manual, reset)."""
+    __tablename__ = "adaptive_adjustments"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    metric_key: Mapped[str] = mapped_column(String(48), index=True)
+    kind: Mapped[str] = mapped_column(String(12))                       # auto | manual | reset
+    previous_threshold: Mapped[float] = mapped_column(Float)
+    new_threshold: Mapped[float] = mapped_column(Float)
+    reason: Mapped[str] = mapped_column(Text)
+    reviews_considered: Mapped[int | None] = mapped_column(Integer)
+    approvals: Mapped[int | None] = mapped_column(Integer)
+    approval_rate: Mapped[float | None] = mapped_column(Float)
+    window_low: Mapped[float | None] = mapped_column(Float)
+    window_high: Mapped[float | None] = mapped_column(Float)
+    changed_by: Mapped[str] = mapped_column(String(96))
+    ts: Mapped[datetime] = mapped_column(DateTime, default=utcnow, index=True)
+
+
 class AppendOnlyError(RuntimeError):
     pass
 
@@ -243,6 +294,6 @@ def _block(_mapper, _conn, target):  # noqa: ANN001
     raise AppendOnlyError(f"{type(target).__name__} is append-only: updates and deletes are not permitted")
 
 
-for _cls in (ReviewEvent, ThresholdChange):
+for _cls in (ReviewEvent, ThresholdChange, AdaptiveFeedback, AdaptiveAdjustment):
     event.listen(_cls, "before_update", _block)
     event.listen(_cls, "before_delete", _block)

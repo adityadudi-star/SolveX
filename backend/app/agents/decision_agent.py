@@ -9,7 +9,7 @@ from langgraph.types import interrupt
 from app.agents.state import Deps
 from app.database.session import session_scope
 from app.models import AuditWorkflow, MetricResult, ReviewEvent, ValidationCheck
-from app.services import validation_service as v
+from app.services import adaptive_service, validation_service as v
 from app.services.decision_service import DecisionInput, decide, overall_decision
 from app.utils.catalog import DECISION_PASSED, DECISION_RECOMMENDED, DECISION_REQUIRED, METRIC_BY_KEY
 from app.workflows.common import emit, mark_done, stage_done, stage_guard
@@ -37,16 +37,19 @@ def decision(deps: Deps, wid: str) -> dict:
         for m in s.query(MetricResult).filter_by(workflow_id=wid):
             md = METRIC_BY_KEY[m.metric_key]
             rel = [c for c in checks if m.metric_key in (c.metric_keys or [])]
+            # per-metric review floor from the Adaptive Threshold Engine (equals the global floor until a metric is tuned)
+            floor, floor_src, floor_epoch = adaptive_service.effective_threshold(s, m.metric_key)
             d = decide(DecisionInput(
                 found=m.found, mandatory=md.mandatory, confidence=m.confidence or 0.0, evidence_verified=m.evidence_verified,
                 validation_statuses=[(c.status, c.blocking) for c in rel], anomaly_status=m.anomaly_status,
                 anomaly_mandatory=m.anomaly_status == "mandatory", xbrl_status=m.xbrl_status,
                 serious_unit_or_period=any(c.check_type in SERIOUS_TYPES and c.status == "failed" for c in rel)),
-                approval=thr["approval_confidence"], review=thr["review_confidence"])
+                approval=thr["approval_confidence"], review=floor)
             m.decision = d.decision
             m.escalation_reasons = d.reasons if d.decision != DECISION_PASSED else []
             ex = dict(m.explanation or {})
             ex["rules_triggered"] = d.rules_triggered
+            ex["threshold_applied"] = {"value": floor, "source": floor_src, "epoch": floor_epoch}   # what was active at decision time
             m.explanation = ex
             decisions.append(d.decision)
             by[d.decision] += 1

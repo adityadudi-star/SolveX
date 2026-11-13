@@ -46,5 +46,7 @@ def update_thresholds(db: Session, changes: dict[str, float], changed_by: str, r
             row.value, row.updated_at = v, utcnow()
         else:
             db.add(Setting(key=k, value=v))
+    from app.services import adaptive_service      # untouched metrics follow the global review floor
+    adaptive_service.sync_defaults(db)
     db.commit()
     return get_thresholds(db)
